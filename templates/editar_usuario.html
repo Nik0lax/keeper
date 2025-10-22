@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="editar-usuario-page" class="container">
+  <h2>Editar Usuário: {{ usuario.username }}</h2>
+
+  <form method="post" class="form-estoque">
+    <div class="form-row-wrap">
+      <div>
+        <label for="role">Perfil</label>
+        <select name="role" id="role" required>
+          <option value="operator" {% if usuario.role == 'operator' %}selected{% endif %}>Operador</option>
+          <option value="admin" {% if usuario.role == 'admin' %}selected{% endif %}>Admin</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="password">Nova senha (opcional)</label>
+        <input type="password" name="password" id="password" placeholder="Deixe vazio para não alterar">
+      </div>
+
+      <div>
+        <button type="submit">Atualizar usuário</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

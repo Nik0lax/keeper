@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keeper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/icone_keeper.png') }}">
+</head>
+<body>
+    <div class="background">
+        <div class="login-box">
+            <h1>KEEPER</h1>
+            <p class="subtitulo">GESTÃO DE CONSUMÍVEIS DE TI</p>
+            <p class="acesso">Insira as suas <strong>CREDENCIAIS</strong></p>
+            <form method="POST" action="{{ url_for('login') }}">
+                <label for="usuario">USUÁRIO</label>
+                <!-- name ajustado para 'username' pra combinar com o backend -->
+                <input type="text" name="username" id="usuario" placeholder="Digite o seu usuário" required>
+            
+                <label for="senha">SENHA</label>
+                <!-- name ajustado para 'password' -->
+                <input type="password" name="password" id="senha" placeholder="Digite sua senha" required>
+            
+                <button type="submit">ENTRAR</button>
+            </form>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    <!-- Versão discreta -->
+    <div class="app-version">
+      Keeper v{{ version }}
+    </div>
+</body>
+<script>
+setTimeout(() => {
+  document.querySelectorAll('.flash-message').forEach(msg => {
+    msg.style.transition = "opacity 0.5s ease";
+    msg.style.opacity = "0";
+    setTimeout(() => msg.remove(), 500);
+  });
+}, 4000);
+</script>
+</html>

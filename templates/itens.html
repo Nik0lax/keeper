@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="itens-page" class="container">
+  <h2>Cadastro de Itens</h2>
+
+  <form method="post" class="form-estoque">
+    <div style="display:flex; gap:10px; flex-wrap:nowrap; align-items:flex-end;">
+      <div style="flex:1; min-width:200px;">
+        <label for="nome_item">Nome do item</label>
+        <input type="text" name="nome" id="nome_item" placeholder="Ex: Toner HP 85A" required>
+      </div>
+
+      <div style="min-width:180px;">
+        <label for="tipo_item">Tipo</label>
+        <input type="text" name="tipo" id="tipo_item" placeholder="Ex: Toner / Cilindro / Ribbon" required>
+      </div>
+
+      <div style="flex:2; min-width:250px;">
+        <label for="descricao_item">Descrição (opcional)</label>
+        <input type="text" name="descricao" id="descricao_item" placeholder="Detalhes sobre o item">
+      </div>
+
+      <div style="min-width:120px;">
+        <button type="submit">Criar item</button>
+      </div>
+    </div>
+  </form>
+
+  <h3 style="margin-top:20px">Itens cadastrados</h3>
+
+  <table class="table-estoque" style="margin-top:10px;">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Descrição</th>
+        <th style="width:80px;text-align:center;">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if itens %}
+        {% for it in itens %}
+        <tr>
+          <td>{{ it.nome }}</td>
+          <td>{{ it.tipo }}</td>
+          <td>{{ it.descricao or '-' }}</td>
+          <td style="text-align:center;">
+            <form action="{{ url_for('excluir_item', item_id=it.id) }}" method="post" style="display:inline;">
+              <button type="submit" title="Excluir" style="background:none;border:none;color:#fff;font-weight:bold;cursor:pointer;"
+                      onclick="return confirm('Tem certeza que deseja excluir este item?');">❌</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="4" style="text-align:center; padding:18px;">Nenhum item cadastrado.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <!-- PAGINAÇÃO -->
+  {% if pagination and pagination.total_pages > 1 %}
+  <nav aria-label="Paginação de itens" style="margin-top:16px; display:flex; justify-content:center; align-items:center; gap:8px;">
+    {# Botão Previous #}
+    {% if pagination.page > 1 %}
+      <a href="{{ url_for('itens', page=pagination.page-1) }}" class="btn-pag" style="padding:6px 10px; background:transparent; border:1px solid rgba(255,255,255,0.12); border-radius:6px; color:#fff; text-decoration:none;">← Anterior</a>
+    {% else %}
+      <span class="btn-pag disabled" style="opacity:0.4; padding:6px 10px; border-radius:6px;">← Anterior</span>
+    {% endif %}
+
+    {# Números de página (mostra range inteligente) #}
+    {% set start = pagination.page - 2 if pagination.page - 2 > 0 else 1 %}
+    {% set end = pagination.page + 2 if pagination.page + 2 <= pagination.total_pages else pagination.total_pages %}
+    {% if start > 1 %}
+      <a href="{{ url_for('itens', page=1) }}" style="padding:6px 8px; border-radius:6px; text-decoration:none; color:#fff;">1</a>
+      {% if start > 2 %}<span style="opacity:0.6;">…</span>{% endif %}
+    {% endif %}
+
+    {% for p in range(start, end + 1) %}
+      {% if p == pagination.page %}
+        <span style="padding:6px 10px; background:#7f00ff; border-radius:6px; font-weight:700;">{{ p }}</span>
+      {% else %}
+        <a href="{{ url_for('itens', page=p) }}" style="padding:6px 10px; border-radius:6px; text-decoration:none; color:#fff; border:1px solid rgba(255,255,255,0.06);">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if end < pagination.total_pages %}
+      {% if end + 1 < pagination.total_pages %}<span style="opacity:0.6;">…</span>{% endif %}
+      <a href="{{ url_for('itens', page=pagination.total_pages) }}" style="padding:6px 8px; border-radius:6px; text-decoration:none; color:#fff;">{{ pagination.total_pages }}</a>
+    {% endif %}
+
+    {# Botão Next #}
+    {% if pagination.page < pagination.total_pages %}
+      <a href="{{ url_for('itens', page=pagination.page+1) }}" class="btn-pag" style="padding:6px 10px; background:transparent; border:1px solid rgba(255,255,255,0.12); border-radius:6px; color:#fff; text-decoration:none;">Próxima →</a>
+    {% else %}
+      <span class="btn-pag disabled" style="opacity:0.4; padding:6px 10px; border-radius:6px;">Next →</span>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+</div>
+{% endblock %}

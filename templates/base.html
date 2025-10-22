@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Keeper — Sistema</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/icone_keeper.png') }}">
+
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>
+        <a href="{{ url_for('dashboard') }}" class="logo-link">Keeper</a>
+      </h1>
+
+      <nav>
+        {% if session.get('user_id') %}
+          
+          {% if session.get('role') == 'admin' %}
+          <div class="dropdown">
+            <button class="dropbtn">Cadastros ▾</button>
+            <div class="dropdown-content">
+              <a href="{{ url_for('itens') }}">Cadastrar Itens</a>
+              <a href="{{ url_for('localizacoes') }}">Cadastrar Localização</a>
+              <a href="{{ url_for('usuarios') }}">Cadastrar Usuários</a>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="dropdown">
+            <button class="dropbtn">Movimentação ▾</button>
+            <div class="dropdown-content">
+              <a href="{{ url_for('estoque') }}">Estoque</a>
+              <a href="{{ url_for('movimentacao') }}">Registrar Entrada/Saída</a>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <button class="dropbtn">Relatórios ▾</button>
+            <div class="dropdown-content">
+              <a href="{{ url_for('relatorio_entrada_saida') }}">Entrada/Saída</a>
+            </div>
+          </div>
+
+          <div class="user-info">
+            <span>Logado como <strong>{{ session.get('username') }}</strong></span>
+            <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+          </div>
+
+        {% else %}
+          <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+        
+      </nav>
+    </div>
+  </header>
+
+  <!-- Flash messages estilo toast fixo -->
+  <div class="flash-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="flash-message {{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <main>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+    <!-- Versão discreta -->
+    <div class="app-version">
+      Keeper v{{ version }}
+    </div>
+  </main>
+
+  
+</body>
+<script>
+setTimeout(() => {
+  document.querySelectorAll('.flash-message').forEach(msg => {
+    msg.style.transition = "opacity 0.5s ease";
+    msg.style.opacity = "0";
+    setTimeout(() => msg.remove(), 500);
+  });
+}, 4000);
+</script>
+</html>

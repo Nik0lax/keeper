@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="estoque-page" class="painel-tv">
+  <div class="painel-tv-wrapper">
+    <h2>Estoque Atual</h2>
+
+    <!-- Painel principal: grid que gera colunas automaticamente -->
+    <div class="painel-scroll">
+      <div class="painel-layout">
+        {% for item in itens %}
+          <div class="card-painel-estoque">
+            <div class="info">
+              <span class="item-nome">{{ item.nome }}</span>
+              <span class="item-tipo">{{ item.tipo }}</span>
+            </div>
+            
+            <div class="item-descricao">{{ item.descricao }}</div>
+            
+            <div class="quantidade-info">
+              <div class="barra-base">
+                {% set cor_barra = (
+                    'vermelho' if item.quantidade <= 3 
+                    else 'amarelo' if item.quantidade <= 6 
+                    else 'verde'
+                ) %}
+
+                <div class="barra-progresso {{ cor_barra }}" style="width: {{ item.quantidade * 10 if item.quantidade <= 10 else 100 }}%;"></div>
+              </div>
+              <span class="item-quantidade">{{ item.quantidade }}</span>
+            </div>
+          </div>
+          {% endfor %}        
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+<script>
+/* Auto-scroll suave: move painel pra direita continuamente e volta */
+(function() {
+  const scrollWrap = document.querySelector('.painel-scroll');
+  if (!scrollWrap) return;
+
+  const speed = 30; // px por segundo (ajusta)
+  let rafId = null;
+  let start = null;
+
+  function step(timestamp) {
+    if (!start) start = timestamp;
+    const elapsed = timestamp - start;
+    const distance = (speed * elapsed) / 1000;
+    scrollWrap.scrollLeft = (scrollWrap.scrollLeft + distance) % (scrollWrap.scrollWidth - scrollWrap.clientWidth + 1);
+    start = timestamp;
+    rafId = requestAnimationFrame(step);
+  }
+
+  // inicia quando o conteúdo estiver carregado
+  window.addEventListener('load', () => {
+    if (scrollWrap.scrollWidth > scrollWrap.clientWidth) {
+      rafId = requestAnimationFrame(step);
+    }
+  });
+
+  // pausa se usuário interagir (melhora UX)
+  ['wheel','touchstart','pointerdown'].forEach(evt => {
+    scrollWrap.addEventListener(evt, () => {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }, {passive:true});
+  });
+})();
+</script>

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>Registrar Entrada/Saída</h2>
+
+  <form method="POST" class="form-estoque">
+    <div class="form-row-wrap">
+        <div style="flex:1; min-width:120px;"> 
+            <label for="item_select">Item</label>
+            <select name="item_id" id="item_select" required>
+                {% for it in itens %}
+                    <option value="{{ it.id }}" data-tipo="{{ it.tipo|e }}">{{ it.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div> <label for="quantidade">Quantidade</label>
+            <input type="number" name="quantidade" id="quantidade" required min="1">
+        </div>
+
+        <div> <label for="local_select">Localização</label>
+            <select name="local_id" id="local_select">
+                {% for loc in localizacoes %}
+                    <option value="{{ loc.id }}">{{ loc.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div> <label for="movimento">Tipo de movimento</label>
+            <select name="movimento" id="movimento" required>
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+            </select>
+        </div>
+
+        <div> 
+            <button type="submit">Registrar</button>
+        </div>
+    </div>
+  </form>
+
+  <hr style="margin:30px 0;" />
+
+  <h3>Últimos registros do usuário</h3>
+  <table class="table-estoque">
+      <thead>
+          <tr>
+              <th>Data/Hora</th>
+              <th>Item</th>
+              <th>Tipo</th>
+              <th>Qtd</th>
+              <th>Movimento</th>
+              <th>Usuário</th>
+              <th>Local</th>
+              <th style="text-align:center;">Ações</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for m in ultimos %}
+          <tr>
+              <td>{{ m.datahora }}</td>
+              <td>{{ m.nome }}</td>
+              <td>{{ m.tipo }}</td>
+              <td>{{ m.quantidade }}</td>
+              <td>{{ m.movimento|capitalize }}</td>
+              <td>{{ m.usuario }}</td>
+              <td>{{ m.localizacao or '' }}</td>
+              <td style="text-align:center;">
+                  <form action="{{ url_for('excluir_movimentacao', mov_id=m.id) }}" method="POST" style="display:inline;">
+                      <button type="submit" class="btn-excluir"
+                              onclick="return confirm('Deseja realmente excluir este registro?');">❌</button>
+                  </form>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+<script>
+/*
+  JS para:
+  1) mover o bloco "Tipo de movimento" para ficar em primeiro;
+  2) esconder/desabilitar o select de Localização quando movimento === "entrada".
+*/
+
+// função utilitária: busca o ancestor div direto do elemento
+function parentDiv(el) {
+  let p = el.parentElement;
+  while (p && p.nodeName !== 'DIV') p = p.parentElement;
+  return p;
+}
+
+(function(){
+  // nodes
+  const formWrap = document.querySelector('.form-row-wrap');
+  if (!formWrap) return; // nada a fazer se estrutura diferente
+
+  const movimentoSelect = document.getElementById('movimento');
+  const localSelect = document.getElementById('local_select');
+
+  // se não existir, aborta
+  if (!movimentoSelect) return;
+
+  // pega as divs que contêm os campos (mantendo estrutura original)
+  const movDiv = parentDiv(movimentoSelect);
+  const localDiv = localSelect ? parentDiv(localSelect) : null;
+
+  // 1) mover o bloco movimento para o início do form
+  // (só faz isso uma vez se movDiv existir e não estiver já no topo)
+  if (movDiv && formWrap.firstElementChild !== movDiv) {
+    formWrap.insertBefore(movDiv, formWrap.firstElementChild);
+  }
+
+  // 2) função que atualiza visibilidade / estado do campo localização
+  function updateLocalVisibility() {
+    const isEntrada = movimentoSelect.value === 'entrada';
+    if (localDiv) {
+      localDiv.style.display = isEntrada ? 'none' : ''; // '' volta ao estilo original
+      // desabilita para evitar submissão quando escondido
+      localSelect.disabled = isEntrada;
+    }
+  }
+
+  // ligar eventos
+  movimentoSelect.addEventListener('change', updateLocalVisibility);
+
+  // roda no load (ex.: se já vier pré-selecionado)
+  updateLocalVisibility();
+})();
+</script>
+{% endblock %}

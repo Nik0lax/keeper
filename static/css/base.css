@@ -1,0 +1,647 @@
+/* ---------- Reset e tipografia ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    height: 100%;
+    background: #0d0836;
+    color: #fff;
+}
+.container {
+    position: relative; /* permite posicionamento absoluto dentro */
+}
+
+.app-version {
+    position: absolute;
+    bottom: 10px;  /* distância do fundo do container */
+    right: 10px;   /* distância da borda direita */
+    font-size: 0.75rem;
+    color: #999;
+    opacity: 0.7;  /* discreto */
+}
+
+/* ---------- Logo clicável ---------- */
+.logo-link {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: 24px;
+    transition: color 0.3s ease;
+}
+
+.logo-link:hover {
+    color: #ffd700; /* mesmo hover das tags <a> */
+}
+/* ---------- Header ---------- */
+header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: linear-gradient(120deg, #0072ff, #7f00ff);
+    padding: 10px 20px;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 24px;
+}
+
+header nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+header nav a, .dropbtn {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #ffd700;
+}
+
+header nav span {
+    font-size: 14px;
+}
+
+/* Container do canto direito */
+header nav .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Botão de Logout */
+header nav .btn-logout {
+    background-color: #dc3545; /* vermelho destacado */
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+header nav .btn-logout:hover {
+    background-color: #ff6b6b;
+    color: #fff;
+}
+/* ---------- Dropdown de Estoque ---------- */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 15px;
+    transition: color 0.2s;
+}
+
+.dropbtn:hover {
+    color: #d1c4ff;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    z-index: 10;
+    right: 0;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(127, 0, 255, 0.1);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+/* ---------- Container principal ---------- */
+main {
+    padding: 30px 20px;
+    min-height: calc(100vh - 60px);
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.05); /* mais sutil */
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px); /* opcional: dá efeito de vidro fosco */
+}
+
+/* ---------- Flash messages ---------- */
+.flash-container {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.flash-message {
+    min-width: 220px;
+    background-color: #157ea9;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    opacity: 0.95;
+    transition: opacity 0.3s ease;
+}
+
+.flash-message.success { background-color: #28a745; }
+.flash-message.info    { background-color: #007bff; }
+.flash-message.warning { background-color: #ffc107; color: #222; }
+.flash-message.danger  { background-color: #dc3545; }
+
+.flash-message:hover {
+    opacity: 1;
+}
+
+
+/* ---------- Formulário de movimentação ---------- */
+.form-estoque {
+    display: flex;
+    flex-wrap: wrap; /* permite quebrar linhas em telas menores */
+    gap: 20px;       /* espaçamento entre os campos */
+    margin-top: 20px;
+    align-items: flex-end; /* alinha labels e botões na mesma linha */
+}
+.form-estoque > div {
+    flex: 1 1 150px; /* cresce, encolhe e tem largura mínima */
+    min-width: 120px; /* largura mínima de cada campo */
+}
+.form-estoque input,
+.form-estoque select,
+.form-estoque button {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    /* ADICIONE ESTA LINHA */
+    width: 100%; 
+}
+
+.form-estoque input,
+.form-estoque select {
+    outline: none;
+}
+
+.form-row-wrap {
+    display: flex;
+    flex-wrap: wrap; /* Permite a quebra de linha dos itens */
+    gap: 10px;       /* Mantém o espaçamento entre os campos */
+    align-items: flex-end; /* Alinha os itens pela base (útil para botão) */
+}
+
+/* Opcional: Ajuste a regra existente para melhor responsividade
+   Se você quiser que os campos dentro de `.form-row-wrap` se ajustem: */
+.form-row-wrap > div {
+    flex: 1 1 150px; /* Cresce, encolhe e tem largura base de 150px */
+    min-width: 120px; /* Largura mínima para evitar que fiquem muito apertados */
+}
+
+/* Opcional: Garanta que o botão não use a regra de 'min-width' se não for necessário */
+.form-row-wrap button {
+    flex: 0 0 auto; /* Não cresce nem encolhe, largura automática */
+}
+
+.form-estoque button {
+    background-color: #7f00ff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-estoque button:hover {
+    background-color: #0056ff;
+}
+.btn-excluir {
+    background: none;
+    border: none;
+    color: #dc3545; /* vermelho padrão de perigo */
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.btn-excluir:hover {
+    color: #ff6b6b;
+}
+/* ---------- Tabela de estoque ---------- */
+
+.table-estoque {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    table-layout: fixed; /* importante: força colunas a usar largura total */
+}
+
+.table-estoque th, .table-estoque td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.table-estoque th {
+    background-color: rgba(0,0,0,0.2);
+    width: 100%; /* garante que a célula tente ocupar toda a coluna */
+}
+
+.table-estoque tr:nth-child(even) {
+    background-color: rgba(0,0,0,0.1);
+    width: 100%; /* garante que a célula tente ocupar toda a coluna */
+}
+
+/* ---------- Relatório ---------- */
+#relatorio {
+    margin-top: 20px;
+}
+
+/* Formulário de filtros */
+#relatorio .form-estoque {
+    display: flex;
+    flex-wrap: nowrap; /* quebra em telas menores */
+    gap: 15px;
+    align-items: flex-end; /* botão alinhado com campos */
+    flex-direction: row;
+}
+
+#relatorio .form-estoque label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+#relatorio .form-estoque input,
+#relatorio .form-estoque select {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    min-width: 120px;
+}
+
+#relatorio .form-estoque button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    background-color: #7f00ff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#relatorio .form-estoque button:hover {
+    background-color: #0056ff;
+}
+
+/* Tabela de movimentações */
+#relatorio .table-estoque {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#relatorio .table-estoque th,
+#relatorio .table-estoque td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+#relatorio .table-estoque th {
+    background-color: rgba(0,0,0,0.2);
+}
+
+#relatorio .table-estoque tr:nth-child(even) {
+    background-color: rgba(0,0,0,0.1);
+}
+.table-estoque td {
+    max-width: 200px; /* ajuste conforme a coluna */
+    word-wrap: break-word;
+    white-space: normal; /* permite quebra de linha */
+}
+
+/* Dashboard cards */
+.cards-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+    align-items: stretch;
+}
+
+.card {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    min-height: 72px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.card-icon {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.12);
+}
+
+.card-body {
+    display:flex;
+    flex-direction:column;
+}
+
+.card-title {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+}
+
+.card-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+}
+
+
+/* Limpa os estilos anteriores de tabela, se houver */
+.painel-tv .table-estoque {
+    display: none; /* Esconde a tabela que não será mais usada neste modo */
+}
+
+/* ---------- Layout Principal do Painel de TV (Duas Colunas) ---------- */
+.painel-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* duas colunas */
+    gap: 20px; /* espaço entre as colunas */
+}
+
+/* Coluna de estoque vira um grid também */
+.coluna-estoque {
+    display: grid;
+    grid-template-rows: repeat(10, auto); /* até 10 cards por coluna */
+    gap: 15px;
+}
+
+.coluna-direita {
+    background: rgba(0, 0, 0, 0.1); /* Um fundo sutil para a coluna direita */
+    border-radius: 10px;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-texto {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.5rem;
+    padding: 20px;
+    text-align: center;
+}
+
+
+/* ---------- Card Individual de Estoque (Item, Tipo, Quantidade e Barra) ---------- */
+
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.item-nome {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.item-tipo {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.quantidade-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-quantidade {
+    font-size: 1.8rem;
+    font-weight: 700;
+    min-width: 40px; /* Para manter o alinhamento */
+    text-align: right;
+}
+
+/* --- Painel TV: layout horizontal com colunas de 4 cards --- */
+.painel-tv-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* área de scroll horizontal */
+.painel-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;       /* scroll suave manual */
+  padding-bottom: 8px;
+}
+
+/* opcional: esconder scrollbar visual (TV-friendly) */
+.painel-scroll::-webkit-scrollbar { height: 8px; }
+.painel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+}
+.painel-scroll::-webkit-scrollbar-track { background: transparent; }
+
+/* Container que organiza as colunas horizontalmente via Grid */
+.painel-layout {
+  display: grid;
+  grid-auto-flow: column;                 /* preenche por coluna à direita */
+  grid-auto-columns: 300px;              /* largura de cada coluna */
+  grid-template-rows: repeat(7, minmax(56px, auto)); /* 8 cards por coluna */
+  gap: 18px;                              /* gap entre colunas */
+  align-items: start;
+}
+
+/* A "coluna-estoque" agrupa 4 cards verticalmente */
+.coluna-estoque {
+  display: grid;
+  grid-template-rows: repeat(4, minmax(56px, auto)); /* 4 cards por coluna */
+  gap: 10px;
+  align-items: start;
+  /* largura fixa da coluna: ajusta pra conter os cards compactos */
+  width: 300px; /* tweak: diminua pra cards mais estreitos (ex: 260px) */
+  box-sizing: border-box;
+}
+
+/* Card compacto — reduzimos padding, fontes e altura */
+.card-painel-estoque {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(255,255,255,0.08);
+  padding: 8px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.28);
+  border-left: 4px solid #4732ff;
+  min-height: 56px;
+  max-height: 72px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Texto e tipografia reduzidos para otimizar densidade */
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.item-nome {
+  font-size: 1.05rem;   /* compacto mas legível */
+  font-weight: 700;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+  margin-top: 10px;
+}
+
+.item-tipo {
+  font-size: 0.78rem;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+/* Quantidade + barra alinhadas sem ocupar muito espaço */
+.quantidade-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-quantidade {
+  font-size: 1.05rem;
+  font-weight: 800;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Barra de progresso fina */
+.barra-base {
+    background-color: #2e2e2e;
+    border-radius: 8px;
+    height: 10px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.barra-progresso {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+/* Cores dinâmicas */
+.barra-progresso.vermelho {
+    background-color: #e53935; /* vermelho forte */
+    box-shadow: 0 0 6px #e53935;
+}
+
+.barra-progresso.amarelo {
+    background-color: #fdd835; /* amarelo */
+    box-shadow: 0 0 6px #fdd835;
+}
+
+.barra-progresso.verde {
+    background-color: #43a047; /* verde */
+    box-shadow: 0 0 6px #43a047;
+}
+
+/* Responsividade: reduz coluna width em telas menores */
+@media (max-width: 1400px) {
+  .coluna-estoque { width: 260px; }
+  .item-nome { font-size: 1rem; }
+}
+
+@media (max-width: 900px) {
+  .coluna-estoque { width: 220px; }
+  .item-nome { font-size: 0.95rem; }
+  .barra-base { height: 10px; }
+}
+
+/* Small tweak: header spacing */
+.painel-tv h2 {
+  margin: 0px 0 12px;
+  font-size: 1.85rem;
+}
+
+/* Descrição do item (nova linha abaixo do nome/tipo) */
+.item-descricao {
+    font-size: 0.8rem;
+    color: #aaa;
+    display: block;
+}

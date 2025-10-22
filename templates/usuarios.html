@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="usuarios-page" class="container">
+  <h2>Gerenciamento de Usuários</h2>
+
+  <form method="post" class="form-estoque">
+    <div class="form-row-wrap">
+      <div>
+        <label for="username">Login</label>
+        <input type="text" name="username" id="username" placeholder="Ex: joao" required>
+      </div>
+
+      <div>
+        <label for="password">Senha</label>
+        <input type="password" name="password" id="password" placeholder="******" required>
+      </div>
+
+      <div>
+        <label for="role">Perfil</label>
+        <select name="role" id="role" required>
+          <option value="operator">Operador</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <div>
+        <button type="submit">Criar usuário</button>
+      </div>
+    </div>
+  </form>
+
+  <h3 style="margin-top:20px;">Usuários cadastrados</h3>
+  <table class="table-estoque" style="margin-top:10px;">
+    <thead>
+      <tr>
+        <th>Login</th>
+        <th>Perfil</th>
+        <th>Criado em</th>
+        <th style="width:100px; text-align:center;">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if usuarios %}
+        {% for u in usuarios %}
+        <tr>
+          <td>{{ u.username }}</td>
+          <td>{{ u.role }}</td>
+          <td>{{ u.created_at }}</td>
+          <td style="text-align:center;">
+            {% if u.id != current_user.id %}
+            <a href="{{ url_for('editar_usuario', user_id=u.id) }}" title="Editar">✏️</a>
+            <form action="{{ url_for('excluir_usuario', user_id=u.id) }}" method="post" style="display:inline;">
+              <button type="submit" class="btn-excluir"
+                      onclick="return confirm('Deseja realmente excluir este usuário?');">
+                ❌
+              </button>
+            </form>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="4" style="text-align:center; padding:18px;">Nenhum usuário cadastrado.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <!-- PAGINAÇÃO -->
+  {% if pagination and pagination.total_pages > 1 %}
+  <nav aria-label="Paginação de usuários" style="margin-top:16px; display:flex; justify-content:center; align-items:center; gap:8px;">
+    {# Botão Previous #}
+    {% if pagination.page > 1 %}
+      <a href="{{ url_for('usuarios', page=pagination.page-1) }}" class="btn-pag" style="padding:6px 10px; background:transparent; border:1px solid rgba(255,255,255,0.12); border-radius:6px; color:#fff; text-decoration:none;">← Anterior</a>
+    {% else %}
+      <span class="btn-pag disabled" style="opacity:0.4; padding:6px 10px; border-radius:6px;">← Anterior</span>
+    {% endif %}
+
+    {# Números de página (range inteligente) #}
+    {% set start = pagination.page - 2 if pagination.page - 2 > 0 else 1 %}
+    {% set end = pagination.page + 2 if pagination.page + 2 <= pagination.total_pages else pagination.total_pages %}
+    {% if start > 1 %}
+      <a href="{{ url_for('usuarios', page=1) }}" style="padding:6px 8px; border-radius:6px; text-decoration:none; color:#fff;">1</a>
+      {% if start > 2 %}<span style="opacity:0.6;">…</span>{% endif %}
+    {% endif %}
+
+    {% for p in range(start, end + 1) %}
+      {% if p == pagination.page %}
+        <span style="padding:6px 10px; background:#7f00ff; border-radius:6px; font-weight:700;">{{ p }}</span>
+      {% else %}
+        <a href="{{ url_for('usuarios', page=p) }}" style="padding:6px 10px; border-radius:6px; text-decoration:none; color:#fff; border:1px solid rgba(255,255,255,0.06);">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if end < pagination.total_pages %}
+      {% if end + 1 < pagination.total_pages %}<span style="opacity:0.6;">…</span>{% endif %}
+      <a href="{{ url_for('usuarios', page=pagination.total_pages) }}" style="padding:6px 8px; border-radius:6px; text-decoration:none; color:#fff;">{{ pagination.total_pages }}</a>
+    {% endif %}
+
+    {# Botão Next #}
+    {% if pagination.page < pagination.total_pages %}
+      <a href="{{ url_for('usuarios', page=pagination.page+1) }}" class="btn-pag" style="padding:6px 10px; background:transparent; border:1px solid rgba(255,255,255,0.12); border-radius:6px; color:#fff; text-decoration:none;">Próxima →</a>
+    {% else %}
+      <span class="btn-pag disabled" style="opacity:0.4; padding:6px 10px; border-radius:6px;">Próxima →</span>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+</div>
+{% endblock %}

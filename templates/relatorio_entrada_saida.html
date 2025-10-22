@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div id="relatorio">
+    <h2>Relatório de Entrada/Saída</h2>
+
+    <form id="filtrosForm" method="post" action="{{ url_for('relatorio_entrada_saida') }}" class="form-estoque">
+      <label for="movimento">Tipo de movimento</label>
+      <select name="movimento" id="movimento">
+        <option value="" {% if not filtro_movimento %}selected{% endif %}>Todos</option>
+        <option value="entrada" {% if filtro_movimento=="entrada" %}selected{% endif %}>Entrada</option>
+        <option value="saida" {% if filtro_movimento=="saida" %}selected{% endif %}>Saída</option>
+      </select>
+
+      <label for="data_inicio">Data início</label>
+      <input type="date" name="data_inicio" id="data_inicio" value="{{ filtro_data_inicio }}">
+
+      <label for="data_fim">Data fim</label>
+      <input type="date" name="data_fim" id="data_fim" value="{{ filtro_data_fim }}">
+
+      <button type="submit">Filtrar</button>
+    </form>
+
+    <!-- tabela de movimentações -->
+    <table class="table-estoque" style="margin-top:12px;">
+      <thead>
+        <tr>
+          <th>Data/Hora</th>
+          <th>Item</th>
+          <th>Tipo</th>
+          <th>Quantidade</th>
+          <th>Localização</th>
+          <th>Movimento</th>
+          <th>Usuário</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if movimentacoes %}
+          {% for m in movimentacoes %}
+          <tr>
+            <td>{{ m.datahora }}</td>
+            <td>{{ m.nome }}</td>
+            <td>{{ m.tipo }}</td>
+            <td>{{ m.quantidade }}</td>
+            <td>{{ m.localizacao or '' }}</td>
+            <td>{{ m.movimento|capitalize }}</td>
+            <td>{{ m.usuario }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="7" style="text-align:center; padding:16px;">Nenhuma movimentação encontrada.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    <!-- PAGINAÇÃO -->
+    {% if pagination and pagination.total_pages > 1 %}
+    <nav aria-label="Paginação de movimentacoes" style="margin-top:16px; display:flex; justify-content:center; align-items:center; gap:8px;">
+      {# Previous #}
+      {% if pagination.page > 1 %}
+        <a href="{{ url_for('relatorio_entrada_saida',
+                            page=pagination.page-1,
+                            movimento=filtro_movimento,
+                            data_inicio=filtro_data_inicio,
+                            data_fim=filtro_data_fim) }}" style="padding:6px 10px; border-radius:6px; text-decoration:none; color:#fff; border:1px solid rgba(255,255,255,0.12);">← Anterior</a>
+      {% else %}
+        <span style="opacity:0.4; padding:6px 10px; border-radius:6px;">← Anterior</span>
+      {% endif %}
+
+      {# Range de páginas inteligente #}
+      {% set start = pagination.page - 2 if pagination.page - 2 > 0 else 1 %}
+      {% set end = pagination.page + 2 if pagination.page + 2 <= pagination.total_pages else pagination.total_pages %}
+      {% if start > 1 %}
+        <a href="{{ url_for('relatorio_entrada_saida', page=1, movimento=filtro_movimento, data_inicio=filtro_data_inicio, data_fim=filtro_data_fim) }}" style="padding:6px 8px; border-radius:6px; text-decoration:none; color:#fff;">1</a>
+        {% if start > 2 %}<span style="opacity:0.6;">…</span>{% endif %}
+      {% endif %}
+
+      {% for p in range(start, end + 1) %}
+        {% if p == pagination.page %}
+          <span style="padding:6px 10px; background:#7f00ff; border-radius:6px; font-weight:700;">{{ p }}</span>
+        {% else %}
+          <a href="{{ url_for('relatorio_entrada_saida', page=p, movimento=filtro_movimento, data_inicio=filtro_data_inicio, data_fim=filtro_data_fim) }}" style="padding:6px 10px; border-radius:6px; text-decoration:none; color:#fff; border:1px solid rgba(255,255,255,0.06);">{{ p }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if end < pagination.total_pages %}
+        {% if end + 1 < pagination.total_pages %}<span style="opacity:0.6;">…</span>{% endif %}
+        <a href="{{ url_for('relatorio_entrada_saida', page=pagination.total_pages, movimento=filtro_movimento, data_inicio=filtro_data_inicio, data_fim=filtro_data_fim) }}" style="padding:6px 8px; border-radius:6px; text-decoration:none; color:#fff;">{{ pagination.total_pages }}</a>
+      {% endif %}
+
+      {# Next #}
+      {% if pagination.page < pagination.total_pages %}
+        <a href="{{ url_for('relatorio_entrada_saida',
+                            page=pagination.page+1,
+                            movimento=filtro_movimento,
+                            data_inicio=filtro_data_inicio,
+                            data_fim=filtro_data_fim) }}" style="padding:6px 10px; border-radius:6px; text-decoration:none; color:#fff; border:1px solid rgba(255,255,255,0.12);">Próxima →</a>
+      {% else %}
+        <span style="opacity:0.4; padding:6px 10px; border-radius:6px;">Próxima →</span>
+      {% endif %}
+    </nav>
+    {% endif %}
+
+    <!-- Exportar Excel mantendo filtros -->
+    <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+      <a href="{{ url_for('relatorio_entrada_saida',
+                          movimento=filtro_movimento,
+                          data_inicio=filtro_data_inicio,
+                          data_fim=filtro_data_fim,
+                          export='excel') }}"
+         style="color:#ffd700; text-decoration:none;">Exportar Excel</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

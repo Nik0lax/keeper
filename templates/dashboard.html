@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="dashboard-page" class="container">
+  <h2>Dashboard</h2>
+
+  <div class="cards-row" role="region" aria-label="Resumo rápido">
+    <!-- Total de Itens -->
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <div class="card-body">
+        <div class="card-title">Itens cadastrados</div>
+        <div class="card-value">{{ totals.itens }}</div>
+      </div>
+    </div>
+
+    <!-- Movimentações -->
+    <div class="card">
+      <div class="card-icon">🔁</div>
+      <div class="card-body">
+        <div class="card-title">Movimentações</div>
+        <div class="card-value">{{ totals.movimentacoes }}</div>
+      </div>
+    </div>
+
+    <!-- Localizações -->
+    <div class="card">
+      <div class="card-icon">📍</div>
+      <div class="card-body">
+        <div class="card-title">Localizações</div>
+        <div class="card-value">{{ totals.localizacoes }}</div>
+      </div>
+    </div>
+
+    <!-- Usuários (apenas admin vê valor real) -->
+    {% if user and user.role == 'admin' %}
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <div class="card-body">
+        <div class="card-title">Usuários</div>
+        <div class="card-value">{{ totals.usuarios }}</div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Aqui dá pra colocar gráficos/últimas movimentações/etc -->
+</div>
+{% endblock %}
